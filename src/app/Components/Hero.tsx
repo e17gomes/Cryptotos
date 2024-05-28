@@ -1,12 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import CryptoInfo from '@/app/Types/CoinType'
 import Link from 'next/link';
 
 
 export const HeroSec = () => {
+
     const token = process.env.token
     const [Coins, setCoins] = useState<CryptoInfo[]>([]);
     const [error, setError] = useState(null);
@@ -41,26 +43,25 @@ export const HeroSec = () => {
     // },[])
 
     const renderedItems = 
-    Coins.map((item: any) => {
-        return (
-            <div className='overflow-hidden'>
-            <Link href={`./${item.id}`} key={item.id} className=' grid grid-cols-1 '>
-            <div className='font-light mb-2 p-2 border-gray-400 border-2 bg-indigo-900 rounded hover:bg-gray-200 transition duration-1000 ease-in-out flex items-center space-x-5 cursor-pointer overflow-hidden'>
-            <p className='font-bold'>{item.market_cap_rank}º</p>
-            <img src={item.image} alt={item.name} width={32} height={32} className='rounded-full'/>
-            <p>{item.name}</p>
-            <p>Current Price: {item.current_price}</p> 
-            </div>
-            </Link>
+    Coins.map((item:any) => {
+        return (    
+            <div className='w-5/6 text-white grid grid-cols-1  ' key={item.id}>
+                <Link href={`./${item.id}`} property={item.id} passHref className=''>
+                    <div className='relative font-light mb-2 p-2 border-gray-400 border-2 bg-gradient-to-r from-indigo-900 via-indigo-800 rounded hover:bg-gray-200 transition duration-1000 ease-in-out flex items-center space-x-5 cursor-pointer overflow-hidden'>
+                        <p className='font-bold'>{item.market_cap_rank}º</p>
+                        <img src={item.image} alt={item.name} width={32} height={32} className='rounded-full' />
+                        <p>{item.name}</p>
+                        <p className='absolute right-0 pr-2 z-50 text-shadow stroke-indigo-900'>Current Price: {item.current_price}</p>
+                    </div>
+                </Link>
             </div>
         );
     });
 
     return (
-        <section className='relative min-h-[80vh] max-h-[80vh] lg:w-[60rem] sm:w-[30rem] p-4 rounded-lg m-auto bg-indigo-950 overscrol'>
+        <section className='relative min-h-[80vh] max-h-[80vh] lg:w-[60rem] sm:w-[30rem] p-4 rounded-lg m-auto overflow-auto bg-zinc-900 flex flex-col items-center'>
             <button onClick={getData} className='font-extrabold'>CLICA AQUI PRA CHAMAR </button>
             {renderedItems} 
-
         </section> 
     )
 }
