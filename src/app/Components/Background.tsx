@@ -2,7 +2,6 @@
 import { cn } from "@/utils/cn";
 import { useMotionValue, motion, useMotionTemplate } from "framer-motion";
 import React from "react";
-import { HeroSec } from "./Hero";
 
 
  const BackgroundDn = ({
@@ -57,7 +56,7 @@ import { HeroSec } from "./Hero";
         }}
       />
 
-      <div className={cn("relative z-20", className)}><HeroSec/></div>
+      <div className={cn("relative z-20", className)}>{children}</div>
     </div>
   );
 };

@@ -5,7 +5,9 @@ export default function Home() {
   return (
     <main className="min-h-[100vh]">
       {/* <HeroSec/> */}
-      <BackgroundDn/>
+      <BackgroundDn>
+      <HeroSec />
+    </BackgroundDn>
 
     </main>
   );
