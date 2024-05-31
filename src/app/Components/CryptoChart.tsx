@@ -11,8 +11,10 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const CryptoChart = ({ cryptoId = '', vsCurrency = 'usd', days = '30' }) => {
+const CryptoChart = ({ cryptoId = '', vsCurrency = 'usd', }) => {
   const [chartData, setChartData] = useState([]);
+  const [days, setDays] = useState('1');
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +30,18 @@ const CryptoChart = ({ cryptoId = '', vsCurrency = 'usd', days = '30' }) => {
         );
 
         const prices = response.data.prices.map((price:any) => ({
-          date: new Date(price[0]).toLocaleDateString(),
+          date:
+            days === '1'
+              ? new Date(price[0]).toLocaleDateString('pt-BR', {
+                  day: '2-digit',
+                  month: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              : new Date(price[0]).toLocaleDateString('pt-BR', {
+                  day: '2-digit',
+                  month: '2-digit',
+                }),
           price: price[1].toFixed(2),
         }));
 
@@ -41,8 +54,18 @@ const CryptoChart = ({ cryptoId = '', vsCurrency = 'usd', days = '30' }) => {
     fetchData();
   }, [cryptoId, vsCurrency, days]);
 
+  const handleDaysChange = (event:any) => {
+    setDays(event.target.value);
+  };
+
   return (
-    <div>
+    <div className='relative'>
+       <select id="days" value={days} onChange={handleDaysChange}  className=' rounded-full p-1 shadow shadow-black absolute right-12 z-50 mb-10'>
+          <option value="1">24 hours</option>
+          <option value="7">7 days</option>
+          <option value="15">15 days</option>
+          <option value="31">31 days</option>
+        </select> 
       <h2>{cryptoId.charAt(0).toUpperCase() + cryptoId.slice(1)} Price Chart</h2>
       <ResponsiveContainer width="100%" height={400}>
         <LineChart

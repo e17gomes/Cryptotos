@@ -1,10 +1,11 @@
 'use client'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import axios from 'axios';
 import BackgroundDn from '../Components/Background'
 import CryptoChart from '../Components/CryptoChart';
+import Footer from '../Components/Footer';
 
 
 
@@ -30,25 +31,26 @@ const CoinPage = () => {
       setCoin(res.data.name)
 
     } catch (err) {
-      console.log(err + 'aqui deu erro lembra de ler o nome do erro')
+      console.log(err)
     }
   }
+useEffect(()=>{
+  getCoinData()
+},[])
+
   return (
     <div>
 
       <BackgroundDn className='relative'>
-        <img src={ImgCoin} alt={Coin} width={64} className='m-auto min-h-[64px]' />
-        <article>
-        </article>
-          
-        <button onClick={getCoinData} className='absolute z-50 '> clica</button>
+        <img src={ImgCoin} alt={Coin} width={80} loading='eager'  className='m-auto min-h-[64px] mb-5 rounded-full' />
+        <h1 className='text-3xl min-h-[30px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400  to-blue-700  mt-2 text-center' >{Coin}</h1>
         <div className=' min-h-[35rem] w-[90vw] bg-gray-400/30 border backdrop-blur-sm border-indigo-700 rounded-lg shadow-gray-400 shadow-md text-center' >
-        <h1 className='text-3xl min-h-[30px] font-bold text-transparent bg-clip-text bg-gradient-to-t from-slate-800 via-slate-500 to-slate-900 mt-2' >{Coin}</h1>
           <section className='  min-h-96 w-11/12 rounded-lg m-auto mt-20'>
             <CryptoChart cryptoId={id}/>
           </section>
         </div>
       </BackgroundDn>
+      <Footer/>
     </div>
   )
 }

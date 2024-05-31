@@ -30,7 +30,7 @@ import React from "react";
   return (
     <div
       className={cn(
-        "relative h-[90vh] flex items-center bg-white dark:bg-black justify-center w-full group",
+        "relative h-screen flex items-center bg-white dark:bg-black justify-center w-full group",
         containerClassName
       )}
       onMouseMove={handleMouseMove}
