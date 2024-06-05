@@ -1,9 +1,12 @@
 import { GithubIcon, HomeIcon, LinkedinIcon } from 'lucide-react'
 import Link from "next/link"
+import { ThemeToggle } from './ToogleTheme'
+
 
 export default function NavBar() {
   return (
-    <header className="border-2 sticky top-0 w-full backdrop-blur-md bg-white/0 dark:bg-gray-950/40 z-50  h-16 flex items-center ">
+    <header className="border-b-2 px-2 sticky top-0 w-full backdrop-blur-md bg-white/0 dark:bg-gray-950/40 z-50  h-16 flex items-center ">
+      <ThemeToggle/>
       <Link className="flex items-center" href="/">
         <p className="h-6 w-6" />
         <span className="text-lg font-extrabold bg-gradient-to-t from-blue-300  via-blue-400 to-blue-600 text-transparent bg-clip-text">CRYPTOTOS</span>

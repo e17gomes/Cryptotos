@@ -78,8 +78,7 @@ export const HeroSec = () => {
     <div>
               <input 
                 type="text"  
-                className='bg-gray-400'
-                value={''}
+                className='bg-gray-'
                 placeholder="Pesquisar criptomoeda"
             />
 

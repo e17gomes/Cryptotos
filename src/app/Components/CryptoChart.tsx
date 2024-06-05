@@ -13,7 +13,7 @@ import {
 
 const CryptoChart = ({ cryptoId = '', vsCurrency = 'usd', }) => {
   const [chartData, setChartData] = useState([]);
-  const [days, setDays] = useState('1');
+  const [days, setDays] = useState('31');
 
 
   useEffect(() => {
@@ -42,9 +42,9 @@ const CryptoChart = ({ cryptoId = '', vsCurrency = 'usd', }) => {
                   day: '2-digit',
                   month: '2-digit',
                 }),
-          price: price[1].toFixed(2),
+          Price: price[1].toFixed(2),
         }));
-
+        
         setChartData(prices);
       } catch (error) {
         console.error('Error fetching data from CoinGecko', error);
@@ -72,14 +72,14 @@ const CryptoChart = ({ cryptoId = '', vsCurrency = 'usd', }) => {
           data={chartData}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="" stroke='' />
           <XAxis dataKey="date" />
           <YAxis />
-          <Tooltip />
-          <Legend />
+          <Tooltip labelStyle={{color:'gray'}} />
+          {/* <Legend /> */}
           <Line
-            type="monotone"
-            dataKey="price"
+            type="natural"
+            dataKey="Price"
             dot={false}
             activeDot={{ r: 5 }}
           />

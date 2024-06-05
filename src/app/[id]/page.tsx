@@ -6,6 +6,7 @@ import axios from 'axios';
 import BackgroundDn from '../Components/Background'
 import CryptoChart from '../Components/CryptoChart';
 import Footer from '../Components/Footer';
+import { ArrowBigLeft } from 'lucide-react'
 
 
 
@@ -42,11 +43,12 @@ useEffect(()=>{
     <div>
 
       <BackgroundDn className='relative'>
+        <Link href={'/'} className='bg-gray-300 dark:bg-gray-800 w-fit px-5 text-2xl border-2 rounded-lg border-blue-400 absolute z-10 text-gray-900 dark:text-blue-400'><ArrowBigLeft/></Link>
         <img src={ImgCoin} alt={Coin} width={80} loading='eager'  className='m-auto min-h-[64px] mb-5 rounded-full' />
         <h1 className='text-3xl min-h-[30px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400  to-blue-700  mt-2 text-center' >{Coin}</h1>
-        <div className=' min-h-[35rem] w-[90vw] bg-gray-400/30 border backdrop-blur-sm border-indigo-700 rounded-lg shadow-gray-400 shadow-md text-center' >
+        <div className=' min-h-[35rem] w-[90vw] bg-gray-400/30 dark:bg-gray-400/20 border backdrop-blur-sm border-indigo-700 rounded-lg shadow-gray-400 shadow-md text-center' >
           <section className='  min-h-96 w-11/12 rounded-lg m-auto mt-20'>
-            <CryptoChart cryptoId={id}/>
+            {/* <CryptoChart cryptoId={id}/> */}
           </section>
         </div>
       </BackgroundDn>
