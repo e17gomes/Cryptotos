@@ -3,20 +3,21 @@
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import CryptoInfo from '@/app/Types/CoinType';
 import Link from 'next/link';
-import { LoaderIcon } from 'lucide-react';
+import { ArrowLeft, ArrowRight, LoaderIcon } from 'lucide-react';
 
 export const HeroSec = () => {
     const token = process.env.apiKey;
     const [Coins, setCoins] = useState<CryptoInfo[]>([]);
+    const [page, setPage] = useState<number>(1);
     const [Loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
 
     const url = {
-        coinMarkets: `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${'usd'}&order=market_cap_${'desc'}&per_page=${'15'}`,
+        coinMarkets: `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${'usd'}&order=market_cap_${'desc'}&per_page=${'50'}`,
     };
 
     const options = {
@@ -25,16 +26,20 @@ export const HeroSec = () => {
         headers: { accept: 'application/json', 'x-cg-pro-api-key': token },
     };
 
-    const getData = async () => {
+    const getData = async (page:number) => {
         try {
             setLoading(true);
             setError(null);
-            const res = await axios.get(options.url);
-            console.log(res.data);
+            const res = await axios.get(`${options.url}&page=${page}`);
             setCoins(res.data);
-        } catch (err) {
-            console.error(err);
-            setError('An error occurred while fetching data. Please try again later.' + err);
+        } catch (err:any) {
+            if (err.response && err.response.status === 429) {
+                setError('Muitas solicitações foram feitas. Por favor, tente novamente mais tarde.');
+                console.log(err)
+            } else {
+                setError('Ocorreu um erro ao buscar os dados. Por favor, tente novamente mais tarde.');
+                console.log(err)
+            }
         } finally {
             setTimeout(() => {
                 setLoading(false);
@@ -42,6 +47,26 @@ export const HeroSec = () => {
         }
     };
 
+
+    const handleNextPage = () => {
+        const newPageNext = page + 1;
+        setPage(newPageNext);
+        getData(newPageNext);
+    };
+
+    const handlePreviousPage = () => {
+        const newPagePrevious = page - 1;
+        setPage(newPagePrevious);
+        getData(newPagePrevious);
+    };
+
+    function handlePageChange(newPage: number) {
+        setPage(newPage);
+        getData(newPage);
+    }
+    function handleJumpPages(numPage: number) {
+        handlePageChange(page + numPage);
+    }
 
 
     const LoadRenderedItems = Array(15).fill(null).map((_, index) => (
@@ -61,41 +86,78 @@ export const HeroSec = () => {
                     <p className='font-bold'>{item.market_cap_rank}º</p>
                     <img src={item.image} alt={item.name} width={32} height={32} className='rounded-full' />
                     <p>{item.name}</p>
-                    <p className='absolute right-0 pr-2 z-50 text-shadow stroke-indigo-900'>${item.current_price}</p>
+                    <p className='absolute right-0 pr-2  text-shadow stroke-indigo-900'>${item.current_price}</p>
                 </div>
             </Link>
         </div>
     ));
 
+    const navOnPages = (
+        <div className='space-x-1 flex items-center mb-1 m-auto'>
+            <button onClick={handlePreviousPage} disabled={page === 1} className="rounded-lg px-4 py-2 bg-gray-200 hover:bg-gray-300 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600 ease-in-out transition"> <ArrowLeft/> </button>
+            
+       
+            <button
+                disabled
+                className="rounded-lg px-4 py-2 text-blue-400 bg-gray-200 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600  ease-in-out transition"
+            >
+                {page}
+            </button>
+            <button
+                onClick={() => handleJumpPages(1)}
+                className="rounded-lg px-4 py-2 bg-gray-200 hover:bg-gray-300 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600  ease-in-out transition"
+            >
+                {page + 1}
+            </button>
+            <button
+                onClick={() => handleJumpPages(2)}
+                className="rounded-lg px-4 py-2 bg-gray-200 hover:bg-gray-300 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600  ease-in-out transition"
+            >
+                {page + 2}
+            </button>
 
-    useEffect(
-        ()=>{
-           getData()
-        },
-   [] )
+            <button
+                onClick={handleNextPage}
+                className="rounded-lg px-4 py-2 bg-gray-200 hover:bg-gray-300 focus:outline-none dark:bg-gray-700 dark:hover:bg-gray-600  ease-in-out transition"
+            >
+                <ArrowRight/>
+            </button>
+        </div>
+    )
+
+    useEffect(() => {
+        const savedPage = localStorage.getItem('currentPage');
+        if (savedPage) {
+            setPage(parseInt(savedPage, 10));
+            getData(parseInt(savedPage, 10));
+        } else {
+            getData(page);
+        }
+    }, []);
+
+    // useEffect(() => {
+    //     localStorage.setItem('currentPage', page.toString());
+    // }, [page]);
+
 
     return (
-    <div>
-              <input 
-                type="text"  
-                className='bg-gray-'
-                placeholder="Pesquisar criptomoeda"
-            />
+        <div className='flex flex-col items-centerr'>
+            {navOnPages}
 
-        <section className='relative min-h-[80vh] max-h-[80vh] lg:w-[60rem] sm:w-[30rem] p-4 rounded-lg m-auto overflow-auto bg-gradient-to-t from-indigo-950/90 to-indigo-700/70 backdrop-blur-[3px] flex flex-col items-center'>  
-            {Loading ? (
-                LoadRenderedItems
-            ) : error ? (
-                <div className='text-red-500 font-bold flex flex-col items-center'>
-                    <p>{error}</p>
-                    <button onClick={getData} className='mt-4 px-4 py-2 bg-red-600 rounded text-white hover:bg-red-700 transition duration-300'>
-                        Retry <LoaderIcon/>
-                    </button>
-                </div>
-            ) : (
-                RenderedItems
-            )}
-        </section>
-    </div>
+            <section className='relative min-h-[80vh] max-h-[80vh] lg:w-[60rem] sm:w-[30rem] p-4 rounded-lg m-auto overflow-auto bg-gradient-to-t from-indigo-950/90 to-indigo-700/70 backdrop-blur-[3px] flex flex-col items-center '>
+                {Loading ? (
+                    LoadRenderedItems
+                ) : error ? (
+                    <div className='text-red-500 font-bold flex flex-col items-center'>
+                        <p>{error}</p>
+                        <button onClick={()=>getData(page)} className='mt-4 px-4 py-2 bg-red-600 rounded text-white hover:bg-red-700 transition duration-300'>
+                            Retry <LoaderIcon />
+                        </button>
+                    </div>
+                ) : (
+                    RenderedItems
+                )}
+            </section>
+        </div>
     );
 }
