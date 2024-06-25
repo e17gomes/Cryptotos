@@ -61,7 +61,7 @@ const CryptoChart = ({ cryptoId = '', vsCurrency = 'usd', }) => {
   return (
     <div className='relative'>
        <select id="days" value={days} onChange={handleDaysChange}  className=' rounded-full p-1 shadow shadow-black absolute right-12 z-50 mb-10'>
-          <option value="1">24 hours</option>
+          <option value="365">Last Year</option>
           <option value="7">7 days</option>
           <option value="15">15 days</option>
           <option value="31">31 days</option>
